@@ -1,0 +1,52 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:lab9.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="lab9.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="lab9"
+		Background="#232026"
+		xmlns:model="using:lab9.Models">
+
+	<Window.Resources>
+		<model:BitmapAssetValueConverter x:Key="variableImage"/>
+	</Window.Resources>
+	
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+	<Grid RowDefinitions="Auto, *">
+		<Menu>
+			<MenuItem Header="OPEN FOLDER" Name="OpenFolder" Background="#452A52"/>
+		</Menu>
+		<SplitView Grid.Row="1" IsPaneOpen="True" DisplayMode="Inline">
+			<SplitView.Pane>
+				<TreeView Name="tree" Items="{Binding Items}" SelectedItem="{Binding SelectedNode}">
+					<TreeView.ItemTemplate>
+						<TreeDataTemplate ItemsSource="{Binding SubFolders}">
+							<Grid ColumnDefinitions="Auto, *">
+								<Image Source="{Binding IconPath, Converter={StaticResource variableImage}}" Height="20" Margin="0, 0, 5, 0"/>
+								<TextBlock Text="{Binding Name}" Grid.Column="1"/>
+							</Grid>
+
+						</TreeDataTemplate>
+					</TreeView.ItemTemplate>
+				</TreeView>
+			</SplitView.Pane>
+			<SplitView.Content>
+				<Grid ColumnDefinitions="100,*,100">
+					<Button Command="{Binding Prev}" Grid.Column="0" Content="Previous" HorizontalAlignment="Stretch" Background="Transparent" VerticalAlignment="Stretch">
+						<Image Source="../Assets/prev.png" Height="35"/>
+					</Button>
+					<Image Grid.Column="1" Source="{Binding ImagePath, Converter={StaticResource variableImage}}" ToolTip.Tip="{Binding #tree.SelectedItem.Fullpath}"/>
+					<Button Command="{Binding Next}" Grid.Column="2" Content="Next" HorizontalAlignment="Stretch" Background="Transparent" VerticalAlignment="Stretch">
+						<Image Source="../Assets/next.png" Height="35"/>
+					</Button>
+				</Grid>
+			</SplitView.Content>
+		</SplitView>
+	</Grid>
+</Window>
